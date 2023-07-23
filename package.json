@@ -3,6 +3,7 @@
   "displayName": "pug2html",
   "description": "Visual studio code extension, which converts to HTML upon saving the pug files in the project.",
   "version": "0.0.1",
+  "icon": "src/assets/pug.png",
   "engines": {
     "vscode": "^1.80.0"
   },
