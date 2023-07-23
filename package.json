@@ -6,7 +6,7 @@
   "engines": {
     "vscode": "^1.80.0"
   },
-  "publisher":"Krunal Limbad",
+  "publisher":"Krun-al",
   "repository": {
     "type": "git",
     "url": "https://github.com/krunal-limbad/pug-2-html-vscode-ext"
