@@ -6,17 +6,43 @@
   "engines": {
     "vscode": "^1.80.0"
   },
+  "publisher":"Krun-al",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krunal-limbad/pug-2-html-vscode-ext"
+  },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:pug",
+    "onLanguage:jade"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Pug-2-html",
+      "properties": {
+        "pug2html.extension.pretty.enable": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Compile pretty HTML output"
+        }
+      }
+    },
     "commands": [
       {
-        "command": "pug2html.helloWorld",
-        "title": "Hello World"
-      }
+        "command": "extension.pug2html.convertToHtml",
+        "title": "Execute: Convert To HTML"
+      },
+      {
+				"command": "extension.pug2html.enablePug2HtmlOnSave",
+				"title": "Enable pug to html on save"
+			},
+			{
+				"command": "extension.pug2html.disablePug2HtmlOnSave",
+				"title": "Disable pug to html on save"
+			}
     ]
   },
   "scripts": {
