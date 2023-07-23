@@ -1,26 +1,85 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+import { exec } from 'child_process';
 import * as vscode from 'vscode';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	let extension = new Pug2HtmlExt(context);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "pug2html" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('pug2html.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from pug2html!');
+	vscode.commands.registerCommand('extension.pug2html.enablePug2HtmlOnSave', () => {
+		extension.isEnabled = true;
 	});
 
-	context.subscriptions.push(disposable);
+	vscode.commands.registerCommand('extension.pug2html.disablePug2HtmlOnSave', () => {
+		extension.isEnabled = false;
+	});
+
+	vscode.workspace.onDidChangeConfiguration(() => {
+		extension.loadConfig();
+	});
+
+	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
+		if (['jade', 'pug'].indexOf(document.languageId) >= 0) {
+			extension.convertToHtml(document.fileName);
+		}
+	});
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
+
+
+interface ExtConfig {
+	pretty: {
+		enable: boolean
+	},
+	additionalCommandLineParams?: string
+}
+
+
+class Pug2HtmlExt {
+	private _outputChannel!: vscode.OutputChannel;
+	private _context!: vscode.ExtensionContext;
+	private _config!: ExtConfig;
+
+	constructor(context: vscode.ExtensionContext) {
+		this._context = context;
+		this._outputChannel = vscode.window.createOutputChannel('Pug 2 Html');
+		this.loadConfig();
+	}
+
+	public sendLog(message: string, hasError?: boolean) {
+		if (hasError) {
+			this._outputChannel.clear();
+			this._outputChannel.show(true);
+		}
+		this._outputChannel.appendLine(message);
+	}
+
+	public get isEnabled(): boolean {
+		return !!this._context.globalState.get('isEnabled', true);
+	}
+
+	public set isEnabled(value: boolean) {
+		this._context.globalState.update('isEnabled', value);
+		this.sendLog(`Convert Pug To HTML On Save ${this.isEnabled ? 'enabled' : 'disabled'}.`);
+	}
+
+	public convertToHtml(filePath: string) {
+		let commandText = `pug "${filePath}"`;
+		if (this._config.pretty.enable) {
+			commandText += ` -P`;
+		}
+		let child = exec(commandText);
+		if (child) {
+			// child.stdout?.on('data', data => this.sendLog(data));
+			child?.stderr?.on('data', data => this.sendLog(data, true));
+			child.on('error', (e) => {
+				this.sendLog(e.message, true);
+			});
+		} else {
+			this.sendLog('child null', true);
+		}
+	}
+
+	public loadConfig() {
+		this._config = <ExtConfig>vscode.workspace.getConfiguration('pug2html').get('extension');
+	}
+}
