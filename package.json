@@ -2,12 +2,12 @@
   "name": "pug2html",
   "displayName": "pug2html",
   "description": "Visual studio code extension, which converts to HTML upon saving the pug files in the project.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "icon": "src/assets/pug.png",
   "engines": {
     "vscode": "^1.80.0"
   },
-  "publisher":"Krun-al",
+  "publisher": "Krun-al",
   "repository": {
     "type": "git",
     "url": "https://github.com/krunal-limbad/pug-2-html-vscode-ext"
@@ -37,13 +37,13 @@
         "title": "Execute: Convert To HTML"
       },
       {
-				"command": "extension.pug2html.enablePug2HtmlOnSave",
-				"title": "Enable pug to html on save"
-			},
-			{
-				"command": "extension.pug2html.disablePug2HtmlOnSave",
-				"title": "Disable pug to html on save"
-			}
+        "command": "extension.pug2html.enablePug2HtmlOnSave",
+        "title": "Enable pug to html on save"
+      },
+      {
+        "command": "extension.pug2html.disablePug2HtmlOnSave",
+        "title": "Disable pug to html on save"
+      }
     ]
   },
   "scripts": {
