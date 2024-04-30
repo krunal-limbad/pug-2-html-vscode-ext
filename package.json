@@ -3,7 +3,7 @@
   "displayName": "Pug Watcher",
   "description": "Visual studio code extension, which converts to HTML upon saving the pug files in the project.",
   "version": "0.1.0",
-  "icon": "logo_128x128.png",
+  "icon": "logo.png",
   "engines": {
     "vscode": "^1.80.0"
   },
